@@ -1,0 +1,20 @@
+{
+  "name": "twitter-crawler",
+  "version": "0.0.1",
+  "description": "Connects to streaming API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yannick Leider",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.0.0-rc.3",
+    "fs": "0.0.2",
+    "glob": "^7.0.3",
+    "lodash": "^4.10.0",
+    "nedb": "^1.8.0",
+    "path": "^0.12.7",
+    "twitter": "^1.2.5"
+  }
+}
