@@ -1,0 +1,16 @@
+{
+  "name": "slack-rtm",
+  "version": "1.0.0",
+  "description": "Mirror Slack Messages to Mail",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yannick Leider",
+  "license": "ISC",
+  "dependencies": {
+    "@slack/client": "^2.3.0",
+    "lodash": "^4.11.0",
+    "nodemailer": "^2.3.2"
+  }
+}
