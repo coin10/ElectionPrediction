@@ -9,6 +9,18 @@ var _ = require('lodash'),
     Channels = [],
     DirectChannels = {};
 
+if (Config.configToken) {
+    var client = new RtmClient(Config.configToken);
+    client.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
+        rtmStartData.users.forEach(function (user) {
+            if (!User[user.id]) console.log('Missing user parameters for: \n\tid: ' + user.id + '\n\tname: ' + user.name + '\n');
+        });
+        process.exit();
+    });
+    client.start();
+    return;
+}
+
 Object.keys(User).forEach(function (userKey) {
     if (User[userKey].token === undefined) return;
     var client = new RtmClient(User[userKey].token);
