@@ -1,4 +1,4 @@
 node_modules/
 .idea/
 .DS_Store
-config/users.js
+config/config.js
