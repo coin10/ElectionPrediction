@@ -25,11 +25,11 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
 });
 
 rtm.on(RTM_EVENTS.MESSAGE, function (message) {
-    if (channels[message.channel].name === 'random') return console.info('Skip random message');
-    if (User[message.user]) {
-        if (!User[message.user].transporter) User[message.user].transporter = nodemailer.createTransport(_.merge(User[message.user].mail, Config.gmail));
+    var mail = undefined;
+    if (User[message.user] && channels[message.channel]) {
+        if (channels[message.channel].name === 'random') return console.info('Skip random message');
 
-        User[message.user].transporter.sendMail({
+        mail = {
             from: '"' + User[message.user].name + '" <' + User[message.user].mail.auth.user + '>',
             to: channels[message.channel].members.filter(function (member) {
                 return member.id !== message.user;
@@ -39,7 +39,13 @@ rtm.on(RTM_EVENTS.MESSAGE, function (message) {
             cc: Config.forwardTo,
             subject: 'Neue Nachricht geschrieben in: ' + channels[message.channel].name,
             text: message.text
-        }, function (err, info) {
+        };
+    }
+
+    if (mail) {
+        if (!User[message.user].transporter) User[message.user].transporter = nodemailer.createTransport(_.merge(User[message.user].mail, Config.gmail));
+
+        User[message.user].transporter.sendMail(mail, function (err, info) {
             if (err) return console.error(err);
             console.info('Message sent: ' + info.response);
         });
