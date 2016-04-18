@@ -6,6 +6,7 @@ Die Nachrichten werden in Echtzeit weitergeleitet.
 * NodeJS Installation,
 * Mail-Postfach für jeden Slack-Nutzer
 * Jedes Postfach, muss vom selben Anbieter sein (bspw. GMail)
+* Wenn ihr GMail verwendet, muss der Zugriff für unsichere Anwendungen aktivert werden. Teilweise wird sonst der Zugriff per SMTP verweigert.
 
 ## Installation ##
 Ist NodeJS installiert und der Ordner aus dem Git geklont, reicht das Ausführen von folgendem Befehl
