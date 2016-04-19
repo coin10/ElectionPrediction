@@ -1,12 +1,12 @@
 var config = require('./config/config'),
-    Datastore = new require('nedb'),
+    fs = require('fs'),
+    spawn = require('child_process').spawn,
     Twitter = require('twitter'),
-    DataPacker = require('./packDB');
     clients = [];
 
     var databases = {};
 
-console.info('\n===Twitter StreamAPI parser===\n');
+console.info('\n=== Welcome to Twitter StreamAPI Parser ===\n');
 
 config.credentials.forEach(function (client) {
     clients.push({
@@ -14,10 +14,8 @@ config.credentials.forEach(function (client) {
         params: client.params,
         i: 0
     });
-    if (databases[client.params.id] === undefined) databases[client.params.id] = new Datastore({
-        filename: config.db.path + '/' + client.params.id + '.db',
-        autoload: true
-    });
+    if (databases[client.params.id] === undefined) databases[client.params.id] = config.db.path + '/' + client.params.id + '.' + Date.now() + '.db';
+
 });
 
 clients.forEach(function (client) {
@@ -29,8 +27,8 @@ clients.forEach(function (client) {
 
 function streamCallback (stream, client) {
     stream.on('data', function (tweet) {
-        if (tweet.limit) return console.log('Limit - Undelivered ' + tweet.limit.track);
-        databases[client.params.id].insert(tweet, function (err, doc) {
+        if (tweet.limit) return trackUndelivered(client, tweet);
+        fs.appendFile(databases[client.params.id], JSON.stringify(tweet), function (err) {
             if (err) return console.error(err);
             if (++client.i % 1000 === 0 && client.i > 0) console.info('Received ' + client.i + ' ' + client.params.track + ' tweets');
         });
@@ -40,4 +38,32 @@ function streamCallback (stream, client) {
     });
 }
 
-DataPacker(databases);
+function trackUndelivered (client, message) {
+    console.log('Limit - Undelivered ' + message.limit.track);
+
+    fs.readFile(client.params.id + '.undelivered.txt', 'utf8', function (err, data) {
+        if (err && err.code !== 'ENOENT') {
+            console.error(err);
+        } else {
+            var undelivered = (err && err.code === 'ENOENT' ? 0 : parseInt(data)) + message.limit.track;
+            fs.writeFile(client.params.id + '.undelivered.txt', undelivered, 'utf8', function (err) {
+                console.error(err);
+            });
+        }
+    });
+}
+
+setTimeout(function () {
+    clients.forEach(function (client) {
+        client.client = undefined;
+        var tar = spawn('tar' , ['-cvzf', databases[client.params.id] + '.tar.gz', databases[client.params.id]]);
+        tar.on('close', function (code) {
+            console.log('Created ' + databases[client.params.id] + '.tar.gz' + ': ' + code);
+
+            fs.unlinkSync(databases[client.params.id]);
+
+            console.info('\n=== See you soon! ===\n');
+            process.exit();
+        });
+    });
+}, 60 * 1000);

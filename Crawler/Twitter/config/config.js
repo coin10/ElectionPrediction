@@ -10,17 +10,17 @@ function Config () {
 
 Config.prototype.validateEnvironmentVariable = function () {
     var environmentFiles = glob.sync(path.resolve('./config/env/' + process.env.NODE_ENV + '.js'));
-    console.log();
+    //console.log();
     if (!environmentFiles.length) {
         if (process.env.NODE_ENV) {
-            console.error('+ Error: No configuration file found for "' + process.env.NODE_ENV + '" environment using development instead');
+    //        console.error('+ Error: No configuration file found for "' + process.env.NODE_ENV + '" environment using development instead');
         } else {
-            console.error('+ Error: NODE_ENV is not defined! Using default development environment');
+    //        console.error('+ Error: NODE_ENV is not defined! Using default development environment');
         }
         process.env.NODE_ENV = 'development';
     }
     // Reset console color
-    console.log();
+    //console.log();
 };
 
 Config.prototype.getGlobbedPaths = function(globPatterns, excludes) {
