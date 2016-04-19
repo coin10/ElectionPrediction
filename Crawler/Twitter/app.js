@@ -73,4 +73,4 @@ setTimeout(function () {
             process.exit();
         });
     });
-}, 1 * 60 * 1000);
+}, 60 * 60 * 1000);
