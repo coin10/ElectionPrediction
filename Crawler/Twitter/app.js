@@ -66,4 +66,4 @@ setTimeout(function () {
             process.exit();
         });
     });
-}, 60 * 1000);
+}, 60 * 60 * 1000);
