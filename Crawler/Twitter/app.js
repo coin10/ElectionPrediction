@@ -14,7 +14,13 @@ config.credentials.forEach(function (client) {
         params: client.params,
         i: 0
     });
-    if (databases[client.params.id] === undefined) databases[client.params.id] = config.db.path + '/' + client.params.id + '.' + Date.now() + '.db';
+    if (databases[client.params.id] === undefined) {
+        databases[client.params.id] = {
+            path: config.db.path + '/',
+            fileName: client.params.id + '.' + Date.now() + '.db'
+        };
+        databases[client.params.id].filePath = databases[client.params.id].path + databases[client.params.id].fileName;
+    }
 
 });
 
@@ -28,7 +34,7 @@ clients.forEach(function (client) {
 function streamCallback (stream, client) {
     stream.on('data', function (tweet) {
         if (tweet.limit) return trackUndelivered(client, tweet);
-        fs.appendFile(databases[client.params.id], JSON.stringify(tweet), function (err) {
+        fs.appendFile(databases[client.params.id].filePath, JSON.stringify(tweet) + '\n', function (err) {
             if (err) return console.error(err);
             if (++client.i % 1000 === 0 && client.i > 0) console.info('Received ' + client.i + ' ' + client.params.track + ' tweets');
         });
@@ -41,12 +47,13 @@ function streamCallback (stream, client) {
 function trackUndelivered (client, message) {
     console.log('Limit - Undelivered ' + message.limit.track);
 
-    fs.readFile(client.params.id + '.undelivered.txt', 'utf8', function (err, data) {
+    var file = databases[client.params.id].path + client.params.id + '.undelivered.txt';
+    fs.readFile(file, 'utf8', function (err, data) {
         if (err && err.code !== 'ENOENT') {
             console.error(err);
         } else {
             var undelivered = (err && err.code === 'ENOENT' ? 0 : parseInt(data)) + message.limit.track;
-            fs.writeFile(client.params.id + '.undelivered.txt', undelivered, 'utf8', function (err) {
+            fs.writeFile(file, undelivered, 'utf8', function (err) {
                 console.error(err);
             });
         }
@@ -56,14 +63,14 @@ function trackUndelivered (client, message) {
 setTimeout(function () {
     clients.forEach(function (client) {
         client.client = undefined;
-        var tar = spawn('tar' , ['-cvzf', databases[client.params.id] + '.tar.gz', databases[client.params.id]]);
+        var tar = spawn('tar' , ['-cvzf', databases[client.params.id].filePath + '.tar.gz', '-C', databases[client.params.id].path, databases[client.params.id].fileName]);
         tar.on('close', function (code) {
             console.log('Created ' + databases[client.params.id] + '.tar.gz' + ': ' + code);
 
-            fs.unlinkSync(databases[client.params.id]);
+            fs.unlinkSync(databases[client.params.id].filePath);
 
             console.info('\n=== See you soon! ===\n');
             process.exit();
         });
     });
-}, 60 * 60 * 1000);
+}, 1 * 60 * 1000);
