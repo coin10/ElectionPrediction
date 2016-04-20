@@ -1,0 +1,80 @@
+
+=== Welcome to Twitter StreamAPI Parser ===
+
+Created client for filter {"id":"merged","track":"clinton, trump","language":"en","filter_level":"none"}
+Received 1000 clinton, trump tweets
+Received 2000 clinton, trump tweets
+Received 3000 clinton, trump tweets
+Received 4000 clinton, trump tweets
+Received 5000 clinton, trump tweets
+Received 6000 clinton, trump tweets
+Limit - Undelivered 2
+null
+Received 7000 clinton, trump tweets
+Received 8000 clinton, trump tweets
+Received 9000 clinton, trump tweets
+Received 10000 clinton, trump tweets
+Received 11000 clinton, trump tweets
+Limit - Undelivered 19
+null
+Limit - Undelivered 10
+Limit - Undelivered 14
+null
+null
+Limit - Undelivered 13
+null
+Received 12000 clinton, trump tweets
+Received 13000 clinton, trump tweets
+Received 14000 clinton, trump tweets
+Received 15000 clinton, trump tweets
+Limit - Undelivered 11
+null
+Limit - Undelivered 21
+null
+Limit - Undelivered 13
+null
+Limit - Undelivered 24
+null
+Limit - Undelivered 28
+null
+Received 16000 clinton, trump tweets
+Received 17000 clinton, trump tweets
+Received 18000 clinton, trump tweets
+Received 19000 clinton, trump tweets
+Received 20000 clinton, trump tweets
+Received 21000 clinton, trump tweets
+Received 22000 clinton, trump tweets
+Received 23000 clinton, trump tweets
+Received 24000 clinton, trump tweets
+Received 25000 clinton, trump tweets
+Received 26000 clinton, trump tweets
+Received 27000 clinton, trump tweets
+Received 28000 clinton, trump tweets
+Created [object Object].tar.gz: 1
+
+=== See you soon! ===
+
+error: Forever detected script exited with code: 0
+error: Script restart attempt #1
+
+=== Welcome to Twitter StreamAPI Parser ===
+
+Created client for filter {"id":"merged","track":"clinton, trump","language":"en","filter_level":"none"}
+Limit - Undelivered 7
+Limit - Undelivered 6
+Limit - Undelivered 2
+Limit - Undelivered 16
+null
+null
+null
+null
+Limit - Undelivered 23
+null
+Limit - Undelivered 16
+null
+Limit - Undelivered 5
+null
+Received 1000 clinton, trump tweets
+Received 2000 clinton, trump tweets
+Received 3000 clinton, trump tweets
+Received 4000 clinton, trump tweets
