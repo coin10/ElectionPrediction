@@ -1,4 +1,5 @@
 var config = require('./config/config'),
+    async = require('async'),
     fs = require('fs'),
     spawn = require('child_process').spawn,
     Twitter = require('twitter'),
@@ -61,7 +62,7 @@ function trackUndelivered (client, message) {
 }
 
 setTimeout(function () {
-    clients.forEach(function (client) {
+    async.forEachOf(clients, function (client, key, done) {
         client.client = undefined;
         var tar = spawn('tar' , ['-cvzf', databases[client.params.id].filePath + '.tar.gz', '-C', databases[client.params.id].path, databases[client.params.id].fileName]);
         tar.on('close', function (code) {
@@ -69,8 +70,10 @@ setTimeout(function () {
 
             fs.unlinkSync(databases[client.params.id].filePath);
 
-            console.info('\n=== See you soon! ===\n');
-            process.exit();
+            done();
         });
+    }, function (err) {
+        console.info('\n=== See you soon! ===\n');
+        process.exit();
     });
 }, 60 * 60 * 1000);
