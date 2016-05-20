@@ -1,6 +1,6 @@
 
 module.exports = function (Config) {
-    Config.db.models.User = Config.db.connection.define('User', {
+    Config.db.models.UserUser = Config.db.connection.define('UserUser', {
         id: { type: 'text', key: true, size: 18 },
         name: String,
         screen_name: String,

@@ -10,14 +10,16 @@ var config = require('./config/config'),
 console.info('\n=== Welcome to Twitter StreamAPI Parser ===\n');
 
 config.credentials.forEach(function (client) {
-    clients.push({
-        client: new Twitter(client.credentials),
-        params: client.params,
-        i: 0
-    });
+    if (client.params) {
+        clients.push({
+            client: new Twitter(client.credentials),
+            params: client.params,
+            i: 0
+        });
+    }
     if (databases[client.params.id] === undefined) {
         databases[client.params.id] = {
-            path: config.db.path + '/',
+            path: config.dataPath + '/',
             fileName: client.params.id + '.' + Date.now() + '.db'
         };
         databases[client.params.id].filePath = databases[client.params.id].path + databases[client.params.id].fileName;

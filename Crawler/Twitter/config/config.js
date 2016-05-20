@@ -102,4 +102,32 @@ Config.prototype.initGlobalConfig = function () {
 
 };
 
+Config.prototype.requireORM = function (done) {
+    var self    = this,
+        db      = {},
+        orm     = require('orm');
+
+    orm.connect(this.mysqlConnection, function (err, db) {
+        if (err && !done) return console.error('Could not connect to database: \n\t' + err);
+        else if (err && done) return done(err);
+
+        self.db.connection = db;
+
+        var models = glob.sync(path.resolve('./config/models/*.js'));
+        if (!models && !done) return console.error('Could not load models');
+        else if (!models && done) return done('Could not load models');
+
+        self.db.models = {};
+        models.forEach(function (model) {
+            require(model)(self);
+        });
+
+        self.db.connection.sync(function (err) {
+            if (done) return done(err);
+            if (err) return console.error('Could not sync database');
+        });
+
+    });
+};
+
 module.exports = new Config();

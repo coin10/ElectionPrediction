@@ -1,7 +1,7 @@
 
 module.exports = function (Config) {
     Config.db.models.FeatureFollowers = Config.db.connection.define('FeatureFollowers', {
-        featureId: String,
-        followerId: String
+        featureId: { type: 'text', key: true, size: 18 },
+        followerId: { type: 'text', key: true, size: 18 }
     });
 };
