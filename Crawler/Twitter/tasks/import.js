@@ -5,15 +5,13 @@ var Config = require('./../config/config'),
     glob = require('glob'),
     spawn = require('child_process').spawn,
     LineByLineReader = require('line-by-line'),
-    rimraf = require('rimraf'),
-    imported = JSON.parse(fs.readFileSync('./tmp/imported.json')),
-    inProcess = JSON.parse(fs.readFileSync('./tmp/inProcess.json'));
+    rimraf = require('rimraf');
 
 if (cluster.isMaster) {
     for (var i = 0; i < require('os').cpus().length / 2; i++) {
         setTimeout(function () {
             cluster.fork();
-        }, i * 1000);
+        }, i * 5000);
     }
 } else {
     Config.requireORM(function (err) {
@@ -28,9 +26,13 @@ if (cluster.isMaster) {
             }
 
             async.eachLimit(archives, 1, function (archive, done) {
+                var imported = JSON.parse(fs.readFileSync('./tmp/imported.json'));
                 if (imported.indexOf(archive) > -1) return done();
+
+                var inProcess = JSON.parse(fs.readFileSync('./tmp/inProcess.json'));
                 if (inProcess.indexOf(archive) > -1) return done();
 
+                inProcess = JSON.parse(fs.readFileSync('./tmp/inProcess.json'));
                 inProcess.push(archive);
                 fs.writeFileSync('./tmp/inProcess.json', JSON.stringify(inProcess));
 
@@ -181,11 +183,13 @@ if (cluster.isMaster) {
 
                                 console.log('Created ' + u + ' users & ' + t + ' tweets');
 
+                                var imported = JSON.parse(fs.readFileSync('./tmp/imported.json'));
+                                imported.push(archive)
+                                fs.writeFileSync('./tmp/imported.json', JSON.stringify(imported));
+
+                                var inProcess = JSON.parse(fs.readFileSync('./tmp/inProcess.json'));
                                 inProcess.splice(1, inProcess.indexOf(archive));
                                 fs.writeFileSync('./tmp/inProcess.json', JSON.stringify(inProcess));
-
-                                imported.push(archive);
-                                fs.writeFileSync('./tmp/imported.json', JSON.stringify(imported));
                                 done();
                             });
                         });

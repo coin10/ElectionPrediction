@@ -1,5 +1,6 @@
-var Config = require(__dirname + '/../config/config'),
-    FollowingCrawler = require(__dirname + '/following'),
+var argv = require('minimist')(process.argv.slice(2))
+    Config = require(__dirname + '/../config/config'),
+    Crawler = require(__dirname + '/' + argv._[0].toLowerCase()),
     cluster = require('cluster');
 
 if (cluster.isMaster) {
@@ -33,27 +34,11 @@ if (cluster.isMaster) {
 } else {
     process.on('message', function (message) {
         if (message.shutdown) {
-            Config.db.models.Features.find({
-                id: message.resetState
-            }, 1, function (err, features) {
-                if (err) {
-                    console.error(err);
-                    //process.exit();
-                } else if (!features || features.length === 0) {
-                    console.error('Feature not found');
-                    //process.exit();
-                } else {
-                    features[0].state = null;
-                    features[0].save(function (err) {
-                        if (err) console.error(err);
-                        process.exit();
-                    });
-                }
-            });
+            Crawler.restart(message.resetState);
         }
     });
 
-    var crawler = new FollowingCrawler(Config.credentials[process.env.credentialKey].credentials, true);
+    var crawler = new Crawler(Config.credentials[process.env.credentialKey].credentials, true);
 
     setTimeout(function () {
         crawler.start();

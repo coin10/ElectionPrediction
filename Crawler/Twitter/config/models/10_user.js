@@ -1,7 +1,7 @@
 
 module.exports = function (Config) {
     Config.db.models.User = Config.db.connection.define('User', {
-        id: { type: 'text', key: true, size: 18 },
+        id: Number,
         name: String,
         screen_name: String,
         location: String,
@@ -24,6 +24,7 @@ module.exports = function (Config) {
         following: String,
         follow_request_sent: String,
         notifications: String,
-        parseState: { type: 'integer', size: 1, defaultValue: 0 }
+        country: String,
+        ageGroupId: Number
     });
 };
